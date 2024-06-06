@@ -25,11 +25,13 @@ class _SelectAccountScreen extends State<SelectAccountScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height / 8),
-                const Text("Select User type", style: TextStyle(fontSize: 30)),
+                const FittedBox(
+                    child: Text("Select User type",
+                        style: TextStyle(fontSize: 30))),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.pink.shade300),
+                      color: Colors.purple.shade300),
                   height: 8,
                   width: MediaQuery.of(context).size.width / 4,
                 ),
@@ -44,11 +46,13 @@ class _SelectAccountScreen extends State<SelectAccountScreen> {
                           siterselected = false;
                         });
                       },
-                      child: SelectContainer(
-                          isSelected: parentselected,
-                          imagePath:
-                              "mom-icon-in-cartoon-style-vector-8655229.jpg",
-                          parent: "Parent"),
+                      child: FittedBox(
+                        child: SelectContainer(
+                            isSelected: parentselected,
+                            imagePath:
+                                "mom-icon-in-cartoon-style-vector-8655229.jpg",
+                            parent: "Parent"),
+                      ),
                     ),
                     InkWell(
                       onTap: () {
@@ -68,7 +72,7 @@ class _SelectAccountScreen extends State<SelectAccountScreen> {
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink.shade300),
+                        backgroundColor: Colors.purple.shade300),
                     onPressed: () {
                       if (parentselected) {
                         Navigator.push(

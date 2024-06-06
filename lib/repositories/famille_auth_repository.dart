@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:babysitter/models/famille.model.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FamilleAuthRepository {
@@ -43,6 +44,7 @@ class FamilleAuthRepository {
               }),
         headers: {'Content-Type': 'application/json'},
         encoding: Encoding.getByName('utf-8'));
+
     return response.body;
   }
 
@@ -65,34 +67,34 @@ class FamilleAuthRepository {
     return response.body;
   }
 
-  Future<int> uploadFileAndUpdateParentInfo(
-      String baseUrl, int parentId, String defaultAddress, XFile? img) async {
-    if (img != null) {
-      var stream = http.ByteStream(img.openRead());
-      stream.cast();
-      var length = await img.length();
+  Future<StreamedResponse> uploadFileAndUpdateParentInfo({
+    required int parentId,
+    required String defaultAddress,
+    required String latitude,
+    required String longitude,
+    required XFile? image,
+  }) async {
+    if (image != null) {
       var request = http.MultipartRequest(
           "PUT", Uri.parse("$baseUrl/famille/updateinfo/$parentId"));
       request.fields['familleAdress'] = defaultAddress;
-      var multipartFile = http.MultipartFile('file', stream, length,
-          filename: img.path.split('/').last);
-      request.files.add(multipartFile);
+      request.fields['familleLatitude'] = latitude.toString();
+      request.fields['familleLongitude'] = longitude.toString();
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        image.path,
+      ));
+
       var response = await request.send();
-      if (response.statusCode == 200) {
-        return response.statusCode;
-      } else {
-        return response.statusCode;
-      }
+
+      return response;
     } else {
       var request = http.MultipartRequest(
           "PUT", Uri.parse("$baseUrl/famille/updateinfo/$parentId"));
       request.fields['familleAdress'] = defaultAddress;
       var response = await request.send();
-      if (response.statusCode == 200) {
-        return response.statusCode;
-      } else {
-        return response.statusCode;
-      }
+
+      return response;
     }
   }
 }

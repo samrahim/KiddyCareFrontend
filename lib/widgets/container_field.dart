@@ -28,7 +28,7 @@ class _UserInputState extends State<UserInput> {
       child: TextFormField(
         controller: widget.controller,
         validator: widget.validator! as String? Function(String?)?,
-        obscureText: widget.isPassword ? widget.isPassword : !widget.isPassword,
+        obscureText: widget.isPassword ? true : false,
         decoration: InputDecoration(
             suffixIcon: Icon(widget.icon),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

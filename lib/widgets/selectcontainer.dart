@@ -22,7 +22,7 @@ class _SelectContainerState extends State<SelectContainer> {
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-              color: widget.isSelected ? Colors.pink.shade300 : Colors.white,
+              color: widget.isSelected ? Colors.purple.shade300 : Colors.white,
               width: 3),
           borderRadius: const BorderRadius.all(Radius.circular(12))),
       height: MediaQuery.of(context).size.height / 3,
@@ -31,14 +31,16 @@ class _SelectContainerState extends State<SelectContainer> {
         children: [
           SizedBox(
             child: Image.asset(
-              height: MediaQuery.of(context).size.height / 4,
+              height: MediaQuery.of(context).size.height / 5,
               width: MediaQuery.of(context).size.width / 2.2,
               "images/${widget.imagePath}",
             ),
           ),
-          Text(
-            widget.parent,
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
+          FittedBox(
+            child: Text(
+              widget.parent,
+              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w300),
+            ),
           )
         ],
       ),

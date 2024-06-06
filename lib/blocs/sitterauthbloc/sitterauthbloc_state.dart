@@ -83,12 +83,58 @@ class SitterUpdateScreenLoaded extends SitterauthblocState {
   List<Object?> get props => [];
 }
 
+class UpdateSitterBioScreenLoaded extends SitterauthblocState {
+  final int sitterId;
+
+  UpdateSitterBioScreenLoaded({required this.sitterId});
+  @override
+  List<Object?> get props => [];
+}
+
 class SitterUpdatingLoading extends SitterauthblocState {
   @override
   List<Object?> get props => [];
 }
 
 class SitterUpdatingErr extends SitterauthblocState {
+  @override
+  List<Object?> get props => [];
+}
+
+// class UpdateSitterSkillsScreenLoaded extends SitterauthblocState {
+//   final int sitterId;
+
+//   UpdateSitterSkillsScreenLoaded({required this.sitterId});
+//   @override
+//   List<Object?> get props => [sitterId];
+// }
+
+class OperationFinished extends SitterauthblocState {
+  @override
+  List<Object?> get props => [];
+}
+
+class PickFrontIdState extends SitterauthblocState {
+  PickFrontIdState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class SendCardIdSuccess extends SitterauthblocState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SendCardIdFailed extends SitterauthblocState {
+  final String err;
+
+  SendCardIdFailed({required this.err});
+  @override
+  List<Object?> get props => [err];
+}
+
+class SendCardIdLoading extends SitterauthblocState {
   @override
   List<Object?> get props => [];
 }

@@ -14,17 +14,20 @@ class ChatService {
 
     _socket.connect();
   }
-  void leaveRoom(int roomId) {
-    _socket.emit('leaveroom', roomId);
+
+  void leaveRoom(int parentId, int sitterId) {
+    String roomInfo = "$parentId$sitterId";
+    _socket.emit('leaveroom', roomInfo);
   }
 
-  StreamController<List<Message>> controller = StreamController();
+  Stream<List<Message>> getChatMessages({
+    required int parentId,
+    required int sitterId,
+  }) async* {
+    _socket.emit('joinRoom', {'parentId': parentId, 'sitterId': sitterId});
 
-  Stream<List<Message>> getChatMessages(int chatId) async* {
-    // Create a StreamController to handle the stream of messages
     StreamController<List<Message>> controller = StreamController();
 
-    // Listen for incoming chat messages from the server
     _socket.on('messages', (data) {
       final List<dynamic> responseData = data;
       List<Message> messages =
@@ -32,20 +35,20 @@ class ChatService {
       controller.add(messages);
     });
 
-    _socket.emit('joinroom', chatId);
     yield* controller.stream;
   }
 
   void addMsg({
-    required String messagebody,
+    required String messageBody,
     required String sender,
-    required int chatRoomid,
+    required int parentId,
+    required int sitterId,
   }) {
-    print("shatroom id =======$chatRoomid");
     _socket.emit('sendmsg', {
-      'message_body': messagebody,
-      'sender': sender,
-      'chatRoom_id': chatRoomid,
+      "message_body": messageBody,
+      "sender": sender,
+      "parentId": parentId.toString(),
+      "sitterId": sitterId.toString(),
     });
   }
 }

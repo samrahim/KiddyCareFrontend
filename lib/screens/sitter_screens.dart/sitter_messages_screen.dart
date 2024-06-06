@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class SitterMessagesScreen extends StatefulWidget {
-  const SitterMessagesScreen({super.key});
+  final int sitterId;
+  const SitterMessagesScreen({super.key, required this.sitterId});
 
   @override
   State<SitterMessagesScreen> createState() => _SitterMessagesScreenState();
@@ -15,10 +16,11 @@ class SitterMessagesScreen extends StatefulWidget {
 class _SitterMessagesScreenState extends State<SitterMessagesScreen> {
   @override
   Widget build(BuildContext context) {
+    print("we start");
     return Scaffold(
       appBar: AppBar(),
       body: FutureBuilder(
-          future: info(),
+          future: info(sitterId: widget.sitterId),
           builder: (context, snap) {
             if (snap.hasData) {
               return ListView.builder(
@@ -36,16 +38,21 @@ class _SitterMessagesScreenState extends State<SitterMessagesScreen> {
                   );
                 },
               );
-            } else {
-              return const SizedBox();
             }
+            if (snap.data!.isEmpty) {
+              return const Center(
+                child:
+                    Text("No messages", style: TextStyle(color: Colors.black)),
+              );
+            }
+            return const Text("data", style: TextStyle(color: Colors.black));
           }),
     );
   }
 }
 
-Future<List<SitterChats>> info() async {
-  final response = await http.get(Uri.parse("$baseUrl/sitter/chats/2"));
+Future<List<SitterChats>> info({required int sitterId}) async {
+  final response = await http.get(Uri.parse("$baseUrl/sitter/chats/$sitterId"));
 
   List map = json.decode(response.body);
   List<SitterChats> chats = map.map((e) => SitterChats.fromJson(e)).toList();

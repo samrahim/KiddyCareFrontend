@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:babysitter/consts.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:babysitter/models/famille.model.dart';
 import 'package:babysitter/repositories/famille_auth_repository.dart';
 import 'package:babysitter/repositories/firebase_messaging_repository.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
 part 'auth_event.dart';
@@ -56,8 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthInValid(err: res));
       } else {
         emit(PhoneAuthScreenLoaded(
-          // model: FamilleModel.fromJson(json.decode(res))
-          id: json.decode(res)['id'],
+          id: json.decode(res)['familleId'],
           type: "Parent",
         ));
       }
@@ -81,14 +80,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OnPhoneAuthErrorEvent>((event, emit) {
       emit(PhoneAuthErrorState(err: event.err));
     });
-    on<UpdateParentInfo>((event, emit) {
+    on<UpdateParentInfo>((event, emit) async {
+      emit(UpdatingLoading());
       try {
-        authrepository.uploadFileAndUpdateParentInfo(
-            baseUrl, event.parentId, event.adress, event.img);
-        emit(UpdatingLoading());
-        emit(LoginScreenLoaded());
+        final StreamedResponse response =
+            await authrepository.uploadFileAndUpdateParentInfo(
+                longitude: event.longitude,
+                parentId: event.parentId,
+                defaultAddress: event.adress,
+                image: event.img,
+                latitude: event.latitude);
+
+        if (response.statusCode == 200) {
+          emit(LoginScreenLoaded());
+        } else {
+          emit(UpdatingErr(
+              err: "response != ${response.stream.bytesToString()}"));
+        }
       } catch (e) {
-        emit(UpdatingErr());
+        emit(UpdatingErr(err: e.toString()));
       }
     });
     on<LogoutEvent>((event, emit) {
@@ -115,7 +125,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             "Failed to register Famille SequelizeUniqueConstraintError: Validation error") {
           emit(UserExist());
         } else if (json.decode(res)['success'] == 'true') {
-          add(NavigateToUpdateScreen(id: json.decode(res)['res']['id']));
+          add(NavigateToUpdateScreen(id: json.decode(res)['res']['familleId']));
         }
       } catch (e) {
         emit(PhoneAuthErrorState(err: e.toString()));

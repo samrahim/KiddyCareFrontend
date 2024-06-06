@@ -1,24 +1,24 @@
 import 'dart:io';
-import 'package:babysitter/blocs/parentauthbloc/auth_bloc.dart';
-import 'package:babysitter/screens/parent_screens/parent_login_screen.dart';
+import 'package:babysitter/blocs/sitterauthbloc/sitterauthbloc_bloc.dart';
+import 'package:babysitter/screens/sitter_screens.dart/update_sitter_bio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ParentImageAndAdress extends StatefulWidget {
-  final int parentId;
-  const ParentImageAndAdress({
+class SitterImageAndAdress extends StatefulWidget {
+  final int sitterId;
+  const SitterImageAndAdress({
     super.key,
-    required this.parentId,
+    required this.sitterId,
   });
 
   @override
-  State<ParentImageAndAdress> createState() => _ParentImageAndAdressState();
+  State<SitterImageAndAdress> createState() => _SitterImageAndAdressState();
 }
 
-class _ParentImageAndAdressState extends State<ParentImageAndAdress> {
+class _SitterImageAndAdressState extends State<SitterImageAndAdress> {
   String defaultAdrees = '';
   XFile? img;
   Future<XFile?> pickimg(ImageSource source) async {
@@ -43,6 +43,7 @@ class _ParentImageAndAdressState extends State<ParentImageAndAdress> {
 
       List<Placemark> placesMarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
+      print(placesMarks);
       setState(() {
         latitude = position.latitude.toString();
         longitude = position.longitude.toString();
@@ -124,25 +125,29 @@ class _ParentImageAndAdressState extends State<ParentImageAndAdress> {
                 },
                 child: const Text("Add Image")),
             ElevatedButton(
-                onPressed: () {
-                  BlocProvider.of<AuthBloc>(context).add(
-                    UpdateParentInfo(
-                        latitude: latitude,
-                        longitude: longitude,
-                        parentId: widget.parentId,
-                        img: img,
-                        adress: defaultAdrees),
-                  );
+                onPressed: () async {
+                  BlocProvider.of<SitterauthblocBloc>(context).add(
+                      UpdateSitterImgAndLoc(
+                          latitude: latitude,
+                          longitude: longitude,
+                          sitterId: widget.sitterId,
+                          sitterimg: img,
+                          sitteradress: defaultAdrees));
                 },
                 child: const Text("save")),
-            BlocListener<AuthBloc, AuthState>(
+            BlocListener<SitterauthblocBloc, SitterauthblocState>(
               listener: (context, state) {
-                if (state is LoginScreenLoaded) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const ParentLogin()));
-                } else if (state is UpdatingErr) {}
+                if (state is UpdateSitterBioScreenLoaded) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => UpdateBio(
+                                sitterId: widget.sitterId,
+                              )));
+                }
               },
-            )
+              child: const SizedBox(),
+            ),
           ],
         ),
       )),

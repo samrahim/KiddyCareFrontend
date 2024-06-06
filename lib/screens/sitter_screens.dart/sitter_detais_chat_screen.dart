@@ -22,7 +22,7 @@ class _SitterDetailsChatScreen extends State<SitterDetailsChatScreen> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              chatroomservice.leaveRoom(widget.chatId);
+              chatroomservice.leaveRoom(widget.chatId, 3);
               Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back_ios)),
@@ -32,7 +32,7 @@ class _SitterDetailsChatScreen extends State<SitterDetailsChatScreen> {
         children: [
           Expanded(
             child: StreamBuilder<List<Message>>(
-              stream: ChatService().getChatMessages(widget.chatId),
+              stream: ChatService().getChatMessages(parentId: 1, sitterId: 2),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -73,9 +73,10 @@ class _SitterDetailsChatScreen extends State<SitterDetailsChatScreen> {
                   icon: const Icon(Icons.send),
                   onPressed: () {
                     chatroomservice.addMsg(
-                        messagebody: messageController.text,
+                        messageBody: messageController.text,
                         sender: "Sitter",
-                        chatRoomid: widget.chatId);
+                        parentId: widget.chatId,
+                        sitterId: 2);
                     messageController.clear();
                   },
                 ),

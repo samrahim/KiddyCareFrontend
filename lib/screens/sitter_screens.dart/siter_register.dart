@@ -1,4 +1,5 @@
 import 'package:babysitter/blocs/sitterauthbloc/sitterauthbloc_bloc.dart';
+import 'package:babysitter/screens/sitter_screens.dart/sitter_add_image.dart';
 import 'package:babysitter/screens/sitter_screens.dart/sitter_login.dart';
 import 'package:babysitter/screens/sitter_screens.dart/sitter_verify_otp_screen.dart';
 import 'package:babysitter/widgets/container_field.dart';
@@ -229,6 +230,14 @@ class _SiterRegisterState extends State<SiterRegister> {
                                   ),
                                 ),
                               );
+                            } else if (state is SitterUpdateScreenLoaded) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SitterImageAndAdress(
+                                            sitterId: state.sitterId,
+                                          )));
                             }
                           },
                         ),

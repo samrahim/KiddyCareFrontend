@@ -1,5 +1,5 @@
 class FamilleModel {
-  int? id;
+  int? familleId;
   final String familleName;
   dynamic famillePhone;
   final String famillePassword;
@@ -7,9 +7,12 @@ class FamilleModel {
   final String familleFcmToken;
   final String familleAdress;
   dynamic familleImagePath;
-
+  dynamic familleLatitude;
+  dynamic familleLongitude;
   FamilleModel({
-    this.id,
+    this.familleLatitude,
+    this.familleLongitude,
+    this.familleId,
     required this.familleName,
     this.famillePhone,
     required this.famillePassword,
@@ -20,7 +23,9 @@ class FamilleModel {
   });
   factory FamilleModel.fromJson(Map<String, dynamic> map) {
     return FamilleModel(
-        id: map['id'],
+        familleLongitude: map['familleLongitude'],
+        familleLatitude: map['familleLatitude'],
+        familleId: map['familleId'],
         famillePassword: map['famillePassword'],
         familleName: map['familleName'],
         famillePhone: map['famillePhone'],

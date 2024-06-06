@@ -108,9 +108,21 @@ class UpdateParentInfo extends AuthEvent {
   final XFile? img;
   final String adress;
   final int parentId;
+  final String latitude;
+  final String longitude;
 
-  UpdateParentInfo(
-      {required this.parentId, required this.img, required this.adress});
+  UpdateParentInfo({
+    required this.parentId,
+    required this.img,
+    required this.adress,
+    required this.latitude,
+    required this.longitude,
+  });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        img,
+        adress,
+        latitude,
+        longitude,
+      ];
 }

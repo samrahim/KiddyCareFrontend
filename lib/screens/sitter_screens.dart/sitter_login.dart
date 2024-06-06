@@ -10,15 +10,15 @@ class SitterLogin extends StatefulWidget {
   const SitterLogin({super.key});
 
   @override
-  State<SitterLogin> createState() => ParentLoginState();
+  State<SitterLogin> createState() => SitterLoginState();
 }
 
-class ParentLoginState extends State<SitterLogin> {
+class SitterLoginState extends State<SitterLogin> {
   SharedRepo repo = SharedRepo();
   TextEditingController sitterPhoneOrEmail = TextEditingController();
   TextEditingController sitterPassword = TextEditingController();
   bool secure = true;
-  bool remember = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -118,22 +118,7 @@ class ParentLoginState extends State<SitterLogin> {
                         hintText: "password"),
                   ),
                 ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: remember,
-                      onChanged: (newVal) {
-                        setState(() {
-                          remember = newVal!;
-                        });
-                      },
-                    ),
-                    const Text(
-                      "remember me",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 48),
                 BlocConsumer<SitterauthblocBloc, SitterauthblocState>(
                     builder: (context, state) {
@@ -154,15 +139,14 @@ class ParentLoginState extends State<SitterLogin> {
                       child: const Text("Login"));
                 }, listener: (context, state) {
                   if (state is SitterPhoneAuthScreenLoaded) {
-                    remember
-                        ? repo.setIdAndType(
-                            userType: "Sitter", id: state.model.id!)
-                        : null;
+                    repo.setIdAndType(
+                        userType: "Sitter", id: state.model.sitterId!);
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SitterInitLayout(
-                          id: state.model.id!,
+                          id: state.model.sitterId!,
                         ),
                       ),
                     );

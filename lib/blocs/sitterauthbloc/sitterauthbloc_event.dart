@@ -102,15 +102,48 @@ class SitterNavigateToUpdateScreen extends SitterauthblocEvent {
   List<Object?> get props => [sitterid];
 }
 
-class UpdateSitterInfo extends SitterauthblocEvent {
+class UpdateSitterImgAndLoc extends SitterauthblocEvent {
   final XFile? sitterimg;
   final String sitteradress;
   final int sitterId;
+  final String latitude;
+  final String longitude;
 
-  UpdateSitterInfo(
-      {required this.sitterId,
-      required this.sitterimg,
-      required this.sitteradress});
+  UpdateSitterImgAndLoc({
+    required this.sitterId,
+    required this.sitterimg,
+    required this.sitteradress,
+    required this.latitude,
+    required this.longitude,
+  });
   @override
-  List<Object?> get props => [sitterimg, sitteradress, sitterId];
+  List<Object?> get props =>
+      [sitterimg, sitteradress, sitterId, latitude, longitude];
+}
+
+class UpdateSitterBioAndExperience extends SitterauthblocEvent {
+  final String bio;
+  final int sitterId;
+  final String experience;
+
+  UpdateSitterBioAndExperience(
+      {required this.bio, required this.experience, required this.sitterId});
+
+  @override
+  List<Object?> get props => [];
+}
+
+// class UpdateSitterSkills extends SitterauthblocEvent {
+//   final int sitterId;
+//   final List<String> skills;
+
+//   UpdateSitterSkills({required this.sitterId, required this.skills});
+//   @override
+//   List<Object?> get props => [sitterId,skills];
+// }
+
+class SendFrontAndBackIdCardsEvent extends SitterauthblocEvent {
+  SendFrontAndBackIdCardsEvent();
+  @override
+  List<Object?> get props => [];
 }

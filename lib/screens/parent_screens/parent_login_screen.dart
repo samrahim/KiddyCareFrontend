@@ -16,7 +16,7 @@ class ParentLoginState extends State<ParentLogin> {
   SharedRepo repo = SharedRepo();
   TextEditingController parentPhoneOrEmail = TextEditingController();
   TextEditingController parentPassword = TextEditingController();
-  bool remember = false;
+
   bool secure = true;
   @override
   Widget build(BuildContext context) {
@@ -106,28 +106,11 @@ class ParentLoginState extends State<ParentLogin> {
                           hintText: "password"),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: remember,
-                        onChanged: (newVal) {
-                          setState(() {
-                            remember = newVal!;
-                          });
-                        },
-                      ),
-                      const Text(
-                        "remember me",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 48),
                   BlocConsumer<AuthBloc, AuthState>(
                     builder: (context, state) {
                       return ElevatedButton(
                           onPressed: () {
-                            if (remember) {}
                             BlocProvider.of<AuthBloc>(context).add(
                                 LoginEventTest(
                                     parentEmail: EmailValidator.validate(
@@ -144,10 +127,7 @@ class ParentLoginState extends State<ParentLogin> {
                     },
                     listener: (context, state) {
                       if (state is PhoneAuthScreenLoaded) {
-                        remember
-                            ? repo.setIdAndType(
-                                userType: "Parent", id: state.id)
-                            : null;
+                        repo.setIdAndType(userType: "Parent", id: state.id);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

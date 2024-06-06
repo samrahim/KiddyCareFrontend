@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:babysitter/consts.dart';
 import 'package:babysitter/screens/parent_screens/detail_chat_screen.dart';
+import 'package:babysitter/widgets/custom_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ParentMessagesScreen extends StatefulWidget {
-  const ParentMessagesScreen({super.key});
+  final int parentId;
+  const ParentMessagesScreen({super.key, required this.parentId});
 
   @override
   State<ParentMessagesScreen> createState() => _ParentMessagesScreenState();
@@ -19,9 +21,12 @@ class _ParentMessagesScreenState extends State<ParentMessagesScreen> {
     return Scaffold(
         body: Column(
       children: [
-        const Text("chats screen"),
+        const Text(
+          "chats screen",
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w400),
+        ),
         FutureBuilder(
-            future: getChats(8),
+            future: getChats(widget.parentId),
             builder: (context, snap) {
               if (snap.hasData) {
                 return Expanded(
@@ -37,11 +42,16 @@ class _ParentMessagesScreenState extends State<ParentMessagesScreen> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         ParentDetailsChatScreen(
-                                            chatId:
-                                                snap.data![ind].chatroomId)));
+                                          imagePath:
+                                              snap.data![ind].sitterImagePath,
+                                          sitterName:
+                                              snap.data![ind].sitterName,
+                                          parentId: snap.data![ind].familleId,
+                                          sitterId: snap.data![ind].sitterId,
+                                        )));
                           },
-                          leading: Image.asset(
-                              "images/mom-icon-in-cartoon-style-vector-8655229.jpg"),
+                          leading: CircAvatar(
+                              imagePath: snap.data![ind].sitterImagePath),
                           title: Text(snap.data![ind].sitterName),
                         ),
                       );
@@ -67,14 +77,12 @@ class ParentChats {
   int sitterId;
   String createdAt;
   String updatedAt;
-  // Sitter? sitter;
+
   String sitterName;
   String sitterImagePath;
   int sitterIds;
 
-  ParentChats(
-      // this.sitter,
-      {
+  ParentChats({
     required this.chatroomId,
     required this.familleId,
     required this.sitterId,
@@ -93,23 +101,18 @@ class ParentChats {
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       sitterName: json['Sitter']["sitterName"],
-      sitterIds: json['Sitter']["id"],
+      sitterIds: json['Sitter']["sitterId"],
       sitterImagePath: json["Sitter"]["sitterImagePath"],
     );
   }
 }
 
 Future<List<ParentChats>> getChats(int id) async {
-  // int id = await SharedPreferences.getInstance().then((value) {
-  //   print('${value.getInt("id")} int');
-  //   return value.getInt("id")!;
-  // });
-
   final res = await http.get(Uri.parse("$baseUrl/famille/chats/$id"));
 
   List map = json.decode(res.body);
   List<ParentChats> chats = map.map((e) => ParentChats.fromJson(e)).toList();
-
+  print(res.body);
   return chats;
 }
 

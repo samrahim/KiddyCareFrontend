@@ -1,4 +1,6 @@
+import 'package:babysitter/blocs/parentauthbloc/auth_bloc.dart';
 import 'package:babysitter/blocs/parentinfo/parentnfo_bloc.dart';
+import 'package:babysitter/screens/select_account.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,195 +22,102 @@ class _ParentProfileScreenState extends State<ParentProfileScreen> {
       body: Center(
         child: ListView(
           children: [
-            BlocBuilder<ParentnfoBloc, ParentnfoState>(
-                builder: (context, state) {
-              if (state is ParentinfoLoaded) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: Colors.red,
-                      height: MediaQuery.of(context).size.width / 3,
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: state.model.familleImagePath != ""
-                          ? Image.network(state.model.familleImagePath!)
-                          : Image.asset(
-                              'images/mom-icon-in-cartoon-style-vector-8655229.jpg'),
-                    ),
-                    state.model.famillePhone != null
-                        ? Text(state.model.famillePhone)
-                        : Text(state.model.familleEmail)
-                  ],
-                );
-              } else {
-                return const SizedBox();
-              }
-            }),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person_2_rounded,
-                          size: 40,
-                          color: Colors.purple,
+            MultiBlocListener(
+              listeners: [
+                BlocListener<AuthBloc, AuthState>(listener: (context, state) {
+                  if (state is LogedOut) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SelectAccountScreen()));
+                  }
+                }),
+              ],
+              child: BlocBuilder<ParentnfoBloc, ParentnfoState>(
+                  builder: (context, state) {
+                if (state is ParentinfoLoaded) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width / 3,
+                        width: MediaQuery.of(context).size.width / 3,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: state.model.familleImagePath != ""
+                              ? Image.network(
+                                  state.model.familleImagePath!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'images/mom-icon-in-cartoon-style-vector-8655229.jpg'),
                         ),
-                        Text("Edit Profile")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.settings,
-                          size: 40,
-                          color: Colors.purple,
+                      ),
+                      state.model.famillePhone != null
+                          ? Text(state.model.famillePhone)
+                          : Text(state.model.familleEmail),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Divider(
+                          thickness: 1,
                         ),
-                        Text("Settings")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.badge,
-                          size: 40,
-                          color: Colors.purple,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            _buildCard(Icons.person_2_rounded, "Edit Profile"),
+                            _buildCard(Icons.settings, "Settings"),
+                            _buildCard(Icons.badge, "Job Application"),
+                            _buildCard(Icons.favorite, "Favorites"),
+                            _buildCard(Icons.support, "Support"),
+                            _buildCard(Icons.logout, "Log Out", onTap: () {
+                              BlocProvider.of<AuthBloc>(context)
+                                  .add(LogoutEvent());
+                            }),
+                          ],
                         ),
-                        Text("Job Application")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.favorite,
-                          size: 40,
-                          color: Colors.purple,
-                        ),
-                        Text("Favorites")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.support,
-                          size: 40,
-                          color: Colors.purple,
-                        ),
-                        Text("Support")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Card(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.logout,
-                          size: 40,
-                          color: Colors.purple,
-                        ),
-                        Text("Log Out")
-                      ],
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 60,
-                    ),
-                    Icon(Icons.arrow_forward_ios)
-                  ],
-                ),
-              ),
-            ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
+            )
           ],
         ),
       ),
     );
   }
+}
+
+Widget _buildCard(IconData iconData, String text, {VoidCallback? onTap}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+    child: SizedBox(
+      height: 90,
+      child: Card(
+        child: InkWell(
+          onTap: onTap,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    iconData,
+                    size: 40,
+                    color: Colors.purple,
+                  ),
+                  Text(text),
+                ],
+              ),
+              const Icon(Icons.arrow_forward_ios),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -14,6 +14,17 @@ class SharedRepo {
     });
   }
 
+  Future<bool> removeData() async {
+    bool bolean = false;
+    await sharedPre().then((shared) async {
+      final removed = await shared.remove("type").then((value) async {
+        await shared.remove("id");
+      });
+      bolean = removed;
+    });
+    return bolean;
+  }
+
   Future<Map<String, dynamic>?> getInfo() async {
     final shared = await sharedPre();
     String? type = shared.getString("type");

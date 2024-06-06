@@ -81,6 +81,9 @@ class UpdatingLoading extends AuthState {
 }
 
 class UpdatingErr extends AuthState {
+  final String err;
+
+  UpdatingErr({required this.err});
   @override
   List<Object?> get props => [];
 }
