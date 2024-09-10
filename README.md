@@ -1,6 +1,5 @@
-# babysitter
 
-# the gloal idea of the app is create relation between sitters and parents 
+# the global idea of the app is create relation between sitters and parents 
 # features
     chat app
     booking 
@@ -9,4 +8,5 @@
 # future features
     search
     online payment
-    notification 
+    notifications
+    //
